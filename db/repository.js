@@ -20,6 +20,7 @@ exports.connect = function() {
 		updated: Date
 	});
 
+	// ---------- Items ----------
 	var _Item = db.model("Item", itemSchema);
 
 	var _addItem = function(item, next) {
@@ -36,6 +37,34 @@ exports.connect = function() {
 		});
 	};
 
+	var _getItem = function(id, next) {
+		console.dir(id);
+		
+		var query = { _id: id };
+
+		return _Item.findOne(query, function(err, item) {
+			console.dir(err),
+			console.dir(item),
+
+			next(err, item);
+		});		
+	};
+
+	// ---------- Categories ----------
+	var categorySchema = mongoose.Schema({
+		description: String
+	});
+
+	var _Category = db.model("Category", categorySchema);
+
+	var _getCategories = function(next) {
+		var query = {};
+
+		return _Category.find(query, function(err, categories) {
+			next(err, categories);
+		});
+	};
+
 	var repository = {
 		// Database.
 		db: db,
@@ -43,7 +72,12 @@ exports.connect = function() {
 		// Items.
 		Item: _Item,
 		addItem: _addItem,
-		getItems: _getItems
+		getItems: _getItems,
+		getItem: _getItem,
+
+		// Categories.
+		Category: _Category,
+		getCategories: _getCategories
 	};
 
 	return repository;

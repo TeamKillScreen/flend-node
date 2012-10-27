@@ -15,14 +15,6 @@ app.use(app.router);
 // Database.
 app.repository = require("./db/repository").connect();
 
-// console.dir(app.repository);
-// console.dir(app.repository.Item);
-
-var item = new app.repository.Item({
-	title: "title",
-	description: new Date()
-});
-
 /*
 app.repository.addItem(item, function(err) {
 	if (err) {
@@ -44,8 +36,9 @@ app.repository.getItems(function(err, people) {
 */
 
 // Routes.
-var routes = require("./routes/user").use(app);
-var routes = require("./routes/item").use(app);
+require("./routes/users").use(app);
+require("./routes/items").use(app);
+require("./routes/categories").use(app);
 
 // Run app.
 var port = process.env.PORT || 3000;
