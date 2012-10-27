@@ -49,4 +49,6 @@ exports.use = function(app) {
 	exports.sendJsonResponse = _sendJsonResponse;
 	exports.sendApiError = _sendApiError;
 	exports.sendNotFoundError = _sendNotFoundError;
+
+	return this;
 };

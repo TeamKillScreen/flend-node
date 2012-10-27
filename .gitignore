@@ -1,5 +1,8 @@
-node_modules/
-logs/
 config/
+logs/
+node_modules/
 scratch/
+test/
+
 *.sh
+

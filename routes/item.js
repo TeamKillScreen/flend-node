@@ -3,7 +3,7 @@ exports.use = function(app) {
 	var util = require("util");
 
 	// API core.
-	var core = require("./core");
+	var core = require("./core").use(app);
 
 	// Get all items.
 	app.get("/items.json", function(req, res) {
