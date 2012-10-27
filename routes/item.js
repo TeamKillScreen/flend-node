@@ -1,13 +1,27 @@
 exports.use = function(app) {
 	// Utility packages.
+	var _ = require("underscore");
 	var util = require("util");
 
 	// API core.
 	var core = require("./core").use(app);
 
+	var _mapDbItemToItem = function(dbItem) {
+		var item = {
+			id: dbItem._id,
+			title: dbItem.title,
+			description: dbItem.description,
+			category: dbItem.category,
+			tags: dbItem.tags,
+			created: dbItem.created			
+		};
+
+		return item;
+	};
+
 	// Get all items.
 	app.get("/items.json", function(req, res) {
-		app.repository.getItems(function(err, items) {
+		app.repository.getItems(function(err, dbItems) {
 			if (err) {
 				var message = util.format("Failed to get items.");
 
@@ -16,6 +30,14 @@ exports.use = function(app) {
 
 				return;
 			}
+
+			var items = [];
+
+			_.each(dbItems, function(dbItem) {
+				var item = _mapDbItemToItem(dbItem);
+
+				items.push(item);
+			});
 
 			core.sendJsonResponse(core.HttpStatus.OK, res, items);
 		});
@@ -44,14 +66,9 @@ exports.use = function(app) {
 				return;
 			}
 
-			core.sendJsonResponse(core.HttpStatus.OK, res, {
-				id: dbItem._id,
-				title: dbItem.title,
-				description: dbItem.description,
-				category: dbItem.category,
-				tags: dbItem.tags,
-				created: dbItem.created
-			});
+			var item = _mapDbItemToItem(dbItem);
+
+			core.sendJsonResponse(core.HttpStatus.OK, res, item);
 		});
 	});
 };
