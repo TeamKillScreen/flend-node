@@ -1,4 +1,7 @@
 exports.use = function(app) {
+	// Utility packages.
+	var util = require("util");
+	
 	// API core.
 	var core = require("./core");
 
