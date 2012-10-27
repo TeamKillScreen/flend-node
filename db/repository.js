@@ -5,7 +5,7 @@ exports.connect = function() {
 
 	// GridFS.
 	var Grid = require('gridfs-stream');
-	// var gridfs;
+	var gridfs;
 
 	// Mongoose.
 	var mongoose = require("mongoose");
@@ -68,7 +68,7 @@ exports.connect = function() {
 
 	var _Photo = db.model("Photo", photoSchema);
 	*/
-	
+
 	// ---------- Categories ----------
 	var categorySchema = mongoose.Schema({
 		description: String
