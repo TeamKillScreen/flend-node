@@ -44,7 +44,7 @@ exports.use = function(app) {
 	});
 
 	// Get item by id.
-	app.get("/items.json/:id", function(req, res) {
+	app.get("/items/:id.json", function(req, res) {
 		var id = req.params.id;
 
 		console.log("100 ->");
