@@ -3,6 +3,10 @@ exports.connect = function() {
 	var config = require("config");
 	var util = require("util");
 
+	// GridFS.
+	var Grid = require('gridfs-stream');
+	// var gridfs;
+
 	// Mongoose.
 	var mongoose = require("mongoose");
 
@@ -10,6 +14,12 @@ exports.connect = function() {
 
 	var db = mongoose.createConnection(config.mongolab.connectionString);
 
+	// GridFS.
+	db.once("open", function() {
+		// TODO: db.db.
+		_gridfs = Grid(db.db, mongoose.mongo);
+	});
+	
 	// Define database schema.
 	var itemSchema = mongoose.Schema({
 		title: String,
@@ -43,12 +53,19 @@ exports.connect = function() {
 		var query = { _id: id };
 
 		return _Item.findOne(query, function(err, item) {
-			console.dir(err),
-			console.dir(item),
+			console.dir(err);
+			console.dir(item);
 
 			next(err, item);
 		});		
 	};
+
+	// ---------- Photos ----------
+	var photoSchema = mongoose.Schema({
+		_itemId: ObjectId
+	});
+
+	var _Photo = db.model("Photo", photoSchema);
 
 	// ---------- Categories ----------
 	var categorySchema = mongoose.Schema({

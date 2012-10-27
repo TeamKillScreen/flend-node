@@ -72,7 +72,7 @@ exports.use = function(app) {
 	// Add item.
 	app.post("/items.json", function(req, res) {
 		var message;
-		var item = req.body.item;
+		var item = req.body.items;
 
 		var dbItem = new app.repository.Item({
 			title: item.title,
