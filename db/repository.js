@@ -13,7 +13,11 @@ exports.connect = function() {
 	// Define database schema.
 	var itemSchema = mongoose.Schema({
 		title: String,
-		description: String
+		description: String,
+		category: String,
+		tags: [ String ],
+		created: Date,
+		updated: Date
 	});
 
 	var _Item = db.model("Item", itemSchema);

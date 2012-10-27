@@ -24,16 +24,17 @@ exports.use = function(app) {
 	// Get all items.
 	app.post("/items.json", function(req, res) {
 		var message;
-		var item = req.body.items;
+		var item = req.body.item;
 
-		var dbItem = new db.Item({
+		var dbItem = new app.repository.Item({
 			title: item.title,
 			description: item.description,
 			category: item.category,
-			tags: item.tags
+			tags: item.tags,
+			created: new Date()
 		});
 
-		app.repository.addItem(function(err) {
+		app.repository.addItem(dbItem, function(err) {
 			if (err) {
 				message = util.format("Failed to add item: %s.", item.title);
 
@@ -43,10 +44,14 @@ exports.use = function(app) {
 				return;
 			}
 
-			console.log(dbItem);
-
 			core.sendJsonResponse(core.HttpStatus.OK, res, {
-				status: "OK"});
+				id: dbItem._id,
+				title: dbItem.title,
+				description: dbItem.description,
+				category: dbItem.category,
+				tags: dbItem.tags,
+				created: dbItem.created
+			});
 		});
 	});
 };
