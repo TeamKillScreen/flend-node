@@ -25,7 +25,9 @@ exports.connect = function() {
 	};
 
 	var _getItems = function(next) {
-		return _Item.find({}, function(err, people) {
+		var query = {};
+
+		return _Item.find(query, function(err, people) {
 			next(err, people);
 		});
 	};

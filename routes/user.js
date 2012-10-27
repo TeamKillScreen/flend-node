@@ -5,11 +5,15 @@ exports.use = function(app) {
 	// API core.
 	var core = require("./core").use(app);
 
-	app.post("/user.json", function(req, res) {
-		var user = req.body.user;
-		var message;
+	app.post("/users.json", function(req, res) {
+		/*
+		console.dir(req.body);
+		res.send("");
+		return;
+		*/
 
-		console.dir(core);
+		var message;
+		var user = req.body.user;
 
 		// Username and password.
 		switch (user.username) {
