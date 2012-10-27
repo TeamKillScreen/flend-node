@@ -15,30 +15,21 @@ app.use(app.router);
 // Database.
 app.repository = require("./db/repository").connect();
 
-/*
-app.repository.addItem(item, function(err) {
-	if (err) {
-		console.error("addItem: Failed:");
-		console.dir(err);
-	}
-});
-
-app.repository.getItems(function(err, people) {
-	if (err) {
-		console.error("getItems: Failed:");
-		console.dir(err);
-	} else {
-		_.each(people, function(person) {
-			console.dir(person);
-		});
-	}
-});
-*/
-
 // Routes.
 require("./routes/users").use(app);
 require("./routes/items").use(app);
 require("./routes/categories").use(app);
+
+// Geo.
+var geo = require("./geo/geo");
+
+geo.getPostcodeLatLng("OL15 8JF", function(error, latlng) {
+	if (error) {
+		console.dir(error);
+	} else {
+		console.dir(latlng);
+	}
+});
 
 // Run app.
 var port = process.env.PORT || 3000;

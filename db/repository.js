@@ -4,33 +4,70 @@ exports.connect = function() {
 	var util = require("util");
 
 	// GridFS.
-	var Grid = require('gridfs-stream');
-	var gridfs;
+	// var Grid = require('gridfs-stream');
+	// var gridfs;
 
 	// Mongoose.
 	var mongoose = require("mongoose");
 
-	// util.format('%s:%s', 'foo'); // 'foo:%s'
-
+	// Connect to database.
 	var db = mongoose.createConnection(config.mongolab.connectionString);
 
 	// GridFS.
+	/*
 	db.once("open", function() {
 		// TODO: db.db.
 		_gridfs = Grid(db.db, mongoose.mongo);
 	});
-	
-	// Define database schema.
+	*/
+
+	// ---------- Users ----------
+	var userSchema = mongoose.Schema({
+		username: String,
+		firstName: String,
+		lastName: String,
+		mobileNumber: Number,
+		postcode: String,
+		emailAddress: String,
+		created: Date,
+		updated: Date
+	});
+
+	var _User = db.model("User", userSchema);
+
+	var _getUser = function(id, next) {
+		console.dir(id);
+		
+		var query = { _id: id };
+
+		return _Item.findOne(query, function(err, item) {
+			console.dir(err);
+			console.dir(item);
+
+			next(err, item);
+		});		
+	};
+
+	var _updateUser = function(item, next) {
+		item.save(function(err) {
+			next(err);
+		});
+	};
+
+	// ---------- Items ----------
 	var itemSchema = mongoose.Schema({
 		title: String,
 		description: String,
+		postcode: String,
+		lat: Number,
+		lng: Number,
+		radius: Number,
 		category: String,
 		tags: [ String ],
 		created: Date,
 		updated: Date
 	});
 
-	// ---------- Items ----------
 	var _Item = db.model("Item", itemSchema);
 
 	var _addItem = function(item, next) {

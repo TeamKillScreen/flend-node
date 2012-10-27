@@ -1,7 +1,11 @@
 exports.use = function(app) {
 	// Utility packages.
 	var _ = require("underscore");
+	var assert = require("assert");
 	var util = require("util");
+
+	// Geo.
+	var geo = require("../geo/geo");
 
 	// API core.
 	var core = require("./core").use(app);
@@ -11,6 +15,10 @@ exports.use = function(app) {
 			id: dbItem._id,
 			title: dbItem.title,
 			description: dbItem.description,
+			postcode: dbItem.postcode,
+			lat: dbItem.lat,
+			lng: dbItem.lng,
+			radius: dbItem.radius,
 			category: dbItem.category,
 			tags: dbItem.tags,
 			created: dbItem.created			
@@ -45,6 +53,7 @@ exports.use = function(app) {
 
 	// Get item by id.
 	app.get("/items/:id.json", function(req, res) {
+		var message;
 		var id = req.params.id;
 
 		console.log("100 ->");
@@ -52,7 +61,7 @@ exports.use = function(app) {
 
 		app.repository.getItem(id, function(err, dbItem) {
 			if (err) {
-				var message = util.format("Failed to get item id %s.", id);
+				message = util.format("Failed to get item id %s.", id);
 
 				console.error(err);
 				core.sendApiError(message);
@@ -74,27 +83,44 @@ exports.use = function(app) {
 		var message;
 		var item = req.body.items;
 
-		var dbItem = new app.repository.Item({
-			title: item.title,
-			description: item.description,
-			category: item.category,
-			tags: item.tags,
-			created: new Date()
-		});
+		assert.ok(item);
+		assert.ok(item.postcode);
 
-		app.repository.addItem(dbItem, function(err) {
-			if (err) {
-				message = util.format("Failed to add item: %s.", item.title);
+		geo.getPostcodeLatLng(item.postcode, function(error, latlng) {
+			if (error) {
+				message = util.format("Failed to get latlng from postcode %s.", item.postcode);
 
-				console.error(err);
+				console.error(error);
 				core.sendApiError(message);
 
 				return;
 			}
 
-			item = _mapDbItemToItem(dbItem);
+			var dbItem = new app.repository.Item({
+				title: item.title,
+				description: item.description,
+				lat: latlng.lat,
+				lng: latlng.lng,
+				postcode: item.postcode,
+				category: item.category,
+				tags: item.tags,
+				created: new Date()
+			});
 
-			core.sendJsonResponse(core.HttpStatus.OK, res, item);
+			app.repository.addItem(dbItem, function(err) {
+				if (err) {
+					message = util.format("Failed to add item: %s.", item.title);
+
+					console.error(err);
+					core.sendApiError(message);
+
+					return;
+				}
+
+				item = _mapDbItemToItem(dbItem);
+
+				core.sendJsonResponse(core.HttpStatus.OK, res, item);
+			});
 		});
 	});
 
