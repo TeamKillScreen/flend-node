@@ -98,6 +98,7 @@ exports.use = function(app) {
 		});
 	});
 
+	/*
 	// Attach photo to item.
 	app.post("/items/:id/photos.json", function(req, res) {
 		var message;
@@ -126,4 +127,5 @@ exports.use = function(app) {
 			core.sendJsonResponse(core.HttpStatus.OK, res, item);
 		});
 	});
+	*/
 };

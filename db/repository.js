@@ -61,12 +61,14 @@ exports.connect = function() {
 	};
 
 	// ---------- Photos ----------
+	/*
 	var photoSchema = mongoose.Schema({
 		_itemId: ObjectId
 	});
 
 	var _Photo = db.model("Photo", photoSchema);
-
+	*/
+	
 	// ---------- Categories ----------
 	var categorySchema = mongoose.Schema({
 		description: String
