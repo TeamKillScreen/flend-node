@@ -33,7 +33,7 @@ exports.use = function(app) {
 		res.send("This is a Node.js application.");
 	});
 
-	app.get("/ping", function(req, res) {
+	app.get("/ping.json", function(req, res) {
 		var response = {
 			ping: "pong",
 			now: new Date()

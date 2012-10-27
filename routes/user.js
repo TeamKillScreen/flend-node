@@ -1,6 +1,6 @@
 exports.use = function(app) {
 	var core = require("./core").use(app);
 
-	app.post("/signin", function(req, res) {
+	app.post("/user.json", function(req, res) {
 	});
 };
