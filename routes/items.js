@@ -49,7 +49,7 @@ exports.use = function(app) {
 	app.get("/items.json", function(req, res) {
 		app.repository.getItems(function(err, dbItems) {
 			if (err) {
-				var message = util.format("Failed to get items.");
+				var message = util.format("Failed to get items. Error: %s", err.toString());
 
 				console.error(err);
 				core.sendApiError(message);
