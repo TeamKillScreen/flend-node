@@ -33,8 +33,10 @@ exports.connect = function() {
 		lastName: String,
 		mobileNumber: Number,
 		postcode: String,
-		lat: Number,
-		lng: Number,
+		geo: {
+			type: [ Number ],
+			index: "2d"
+		},
 		emailAddress: String,
 		categories: [ mongoose.Schema.Types.ObjectId ],
 		created: Date,
@@ -87,8 +89,10 @@ exports.connect = function() {
 		title: String,
 		description: String,
 		postcode: String,
-		lat: Number,
-		lng: Number,
+		geo: {
+			type: [ Number ],
+			index: "2d"
+		},
 		radius: Number,
 		category: String,
 		tags: [ String ],

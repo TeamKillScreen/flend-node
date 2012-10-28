@@ -26,8 +26,8 @@ exports.use = function(app) {
 			title: dbItem.title,
 			description: dbItem.description,
 			postcode: dbItem.postcode,
-			lat: dbItem.lat,
-			lng: dbItem.lng,
+			lat: dbItem.geo[0],
+			lng: dbItem.geo[1],
 			radius: dbItem.radius,
 			category: dbItem.category,
 			tags: dbItem.tags,
@@ -109,8 +109,10 @@ exports.use = function(app) {
 			var dbItem = new app.repository.Item({
 				title: item.title,
 				description: item.description,
-				lat: latlng.lat,
-				lng: latlng.lng,
+				geo: [
+					latlng.lat,
+					latlng.lng
+				],
 				postcode: item.postcode,
 				category: item.category,
 				tags: item.tags,

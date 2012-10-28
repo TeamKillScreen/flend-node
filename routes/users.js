@@ -18,8 +18,8 @@ exports.use = function(app) {
 			mobileNumber: dbUser.mobileNumber,
 			emailAddress: dbUser.emailAddress,
 			postcode: dbUser.postcode,
-			lat: dbUser.lat,
-			lng: dbUser.lng,
+			lat: dbUser.geo[0],
+			lng: dbUser.geo[1],
 			categories: dbUser.categories,
 			created: dbUser.created,
 			updated: dbUser.updated	
@@ -60,8 +60,10 @@ exports.use = function(app) {
 				dbUser.mobileNumber = user.mobileNumber;
 				dbUser.emailAddress = user.emailAddress;
 				dbUser.postcode = user.postcode;
-				dbUser.lat = latlng.lat;
-				dbUser.lng = latlng.lng;
+				dbUser.geo = [
+					latlng.lat,
+					latlng.lng
+				],
 				dbUser.categories = user.categories;
 
 				app.repository.updateUser(dbUser, function(err) {
