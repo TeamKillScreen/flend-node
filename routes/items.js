@@ -158,23 +158,24 @@ exports.use = function(app) {
 							}
 
 							_.each(users, function(user) {
-								var itemURL = util.format("http://www.flend.co/items/%s", item.id);
+								if (user.id !== item.userId.toString())
+								{
+									var itemURL = util.format("http://www.flend.co/items/%s", item.id);
 
-								var bitly = new Bitly(config.bitly.username, config.bitly.apikey);
-								bitly.shorten(itemURL, function(err, response) {
-									if (err) throw err;
+									var bitly = new Bitly(config.bitly.username, config.bitly.apikey);
+									bitly.shorten(itemURL, function(err, response) {
+										if (err) throw err;
 
-									// See http://code.google.com/p/bitly-api/wiki/ApiDocumentation for format of returned object
-									var short_url = response.data.url;
+										// See http://code.google.com/p/bitly-api/wiki/ApiDocumentation for format of returned object
+										var short_url = response.data.url;
 
-									// Do something with data
-									var distance = geolib.convertUnit("mi", geolib.getDistance({latitude: latlng.lat, longitude: latlng.lng}, {latitude: user.geo[0], longitude: user.geo[1]}), 2);
+										// Do something with data
+										var distance = geolib.convertUnit("mi", geolib.getDistance({latitude: latlng.lat, longitude: latlng.lng}, {latitude: user.geo[0], longitude: user.geo[1]}), 2);
 
-									message = util.format("Flend.co: A new item request has been added %s miles from you. Item details: '%s'. Link: %s", distance, item.title, short_url);
-									sms.sendSms(user.mobileNumber, message);
-								});
-
-								
+										message = util.format("Flend.co: A new item request has been added %s miles from you. Item details: '%s'. Link: %s", distance, item.title, short_url);
+										sms.sendSms(user.mobileNumber, message);
+									});
+								}
 							});
 						});
 				}, 0);
