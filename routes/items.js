@@ -52,7 +52,7 @@ exports.use = function(app) {
 				var message = util.format("Failed to get items. %s", err.toString());
 
 				console.error(err);
-				core.sendApiError(message);
+				//core.sendApiError(message);
 
 				return;
 			}
