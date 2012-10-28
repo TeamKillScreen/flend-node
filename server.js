@@ -21,6 +21,7 @@ require("./routes/items").use(app);
 require("./routes/categories").use(app);
 
 // Geo.
+/*
 var geo = require("./geo/geo");
 
 geo.getPostcodeLatLng("OL15 8JF", function(error, latlng) {
@@ -30,6 +31,7 @@ geo.getPostcodeLatLng("OL15 8JF", function(error, latlng) {
 		console.dir(latlng);
 	}
 });
+*/
 
 // Run app.
 var port = process.env.PORT || 3000;

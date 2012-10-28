@@ -31,6 +31,8 @@ exports.connect = function() {
 		lastName: String,
 		mobileNumber: Number,
 		postcode: String,
+		lat: Number,
+		lng: Number,
 		emailAddress: String,
 		created: Date,
 		updated: Date

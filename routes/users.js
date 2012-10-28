@@ -1,9 +1,13 @@
 exports.use = function(app) {
 	// Utility packages.
+	var assert = require("assert");
 	var util = require("util");
 
 	// API core.
 	var core = require("./core").use(app);
+
+	// Geo.
+	var geo = require("../geo/geo");
 
 	var _mapDbUserToUser = function(dbUser) {
 		var user = {
@@ -13,6 +17,9 @@ exports.use = function(app) {
 			lastName: dbUser.lastName,
 			mobileNumber: dbUser.mobileNumber,
 			emailAddress: dbUser.emailAddress,
+			postcode: dbUser.postcode,
+			lat: dbUser.lat,
+			lng: dbUser.lng,
 			tags: dbUser.tags,
 			created: dbUser.created,
 			updated: dbUser.updated	
@@ -23,7 +30,10 @@ exports.use = function(app) {
 
 	app.put("/users/:id.json", function(req, res) {
 		var message;
-		var user = req.body.users;
+		var id = req.params.id;
+		var user = req.body.user;
+
+		assert.ok(id);
 
 		geo.getPostcodeLatLng(user.postcode, function(error, latlng) {
 			if (error) {
@@ -35,7 +45,7 @@ exports.use = function(app) {
 				return;
 			}
 
-			db.repository.getUser(id, function(err, dbUser) {
+			app.repository.getUser(id, function(err, dbUser) {
 				if (error) {
 					message = util.format("Failed to get user by id %s.", id);
 
@@ -49,6 +59,7 @@ exports.use = function(app) {
 				dbUser.lastName = user.lastName;
 				dbUser.mobileNumber = user.mobileNumber;
 				dbUser.emailAddress = user.emailAddress;
+				dbUser.postcode = user.postcode;
 				dbUser.lat = latlng.lat;
 				dbUser.lng = latlng.lng;
 
