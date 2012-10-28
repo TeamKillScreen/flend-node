@@ -2,6 +2,7 @@ exports.use = function(app) {
 	// Utility packages.
 	var _ = require("underscore");
 	var assert = require("assert");
+	var config = require("config");
 	var util = require("util");
 
 	// Geo.
@@ -9,6 +10,15 @@ exports.use = function(app) {
 
 	// API core.
 	var core = require("./core").use(app);
+
+	// Pusher API.
+	var Pusher = require("node-pusher");
+
+	var pusher = new Pusher({
+		appId: config.pusher.appId,
+		key: config.pusher.key,
+		secret: config.pusher.secret
+	});
 
 	var _mapDbItemToItem = function(dbItem) {
 		var item = {
@@ -118,6 +128,11 @@ exports.use = function(app) {
 				}
 
 				item = _mapDbItemToItem(dbItem);
+
+				// Push the message asap.
+				setTimeout(function() {
+					pusher.trigger("flend", "newItem", item);
+				}, 0);
 
 				core.sendJsonResponse(core.HttpStatus.OK, res, item);
 			});
