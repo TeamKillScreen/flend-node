@@ -2,6 +2,7 @@
 	<messages>  
 		<accountreference>%s</accountreference>
 		<message>
+			<from>FLEND.CO</from>
 			<to>%s</to>
 			<body>%s</body>
 		</message>  
