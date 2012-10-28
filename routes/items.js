@@ -38,6 +38,7 @@ exports.use = function(app) {
 			radius: dbItem.radius,
 			category: dbItem.category,
 			tags: dbItem.tags,
+			userId: dbItem.userId,
 			created: dbItem.created			
 		};
 
@@ -123,6 +124,7 @@ exports.use = function(app) {
 				postcode: item.postcode,
 				category: item.category,
 				tags: item.tags,
+				userId: item.userId,
 				created: new Date()
 			});
 

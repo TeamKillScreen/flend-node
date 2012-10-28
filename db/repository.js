@@ -112,6 +112,7 @@ exports.connect = function() {
 		radius: Number,
 		category: String,
 		tags: [ String ],
+		userId: mongoose.Schema.Types.ObjectId,
 		created: Date,
 		updated: Date
 	});
