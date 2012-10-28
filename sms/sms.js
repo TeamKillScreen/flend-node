@@ -50,49 +50,44 @@ var _handleResponse = function(error, response, body, next) {
 
 var _sendSms = function(mobileNumber, message) {
 	var xml = util.format(
-		template.toString(),
+		template,
 		config.esendex.accountreference,
 		mobileNumber,
 		message);
-
-	console.log("sms ->");
-	console.log(xml);
 
 	var auth = util.format("%s:%s",
 		config.esendex.username,
 		config.esendex.password);
 
-	console.log(auth);
-
 	var endpoint = url.format({
 		protocol: "https",
 		hostname: "api.esendex.com",
-		pathname: "v1.0/messagedispatcher"
+		pathname: "v1.0/messagedispatcher",
+		auth: auth
 	});
 
-	var headers = {
-		"content-type": "application/xml",
-		"authorization": "Basic"
+	var options = {
+		headers: {
+			"content-type": "application/xml"
+		},
+		url: endpoint,
+		body: xml
 	};
 
+	
 	var parseResponse = function(error, response) {
 		if (error) {
-			// console.dir(error);
+			console.log("=> SMS ERROR");
+			console.dir(error);
 
 		} else {
+			console.log("=> SMS OK");
 			// console.dir(response);
 
 		}
 	};
 
-	// Richard
-	// https://github.com/mikeal/request
-	request.post({
-		headers: headers,
-		url: endpoint,
-		body: xml,
-		auth: auth
-	}, function(error, response, body) {
+	request.post(options, function(error, response, body) {
 		_handleResponse(error, response, body, parseResponse);
 	});
 };
