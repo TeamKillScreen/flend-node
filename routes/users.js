@@ -20,7 +20,7 @@ exports.use = function(app) {
 			postcode: dbUser.postcode,
 			lat: dbUser.lat,
 			lng: dbUser.lng,
-			tags: dbUser.tags,
+			categories: dbUser.categories,
 			created: dbUser.created,
 			updated: dbUser.updated	
 		};
@@ -35,8 +35,8 @@ exports.use = function(app) {
 
 		assert.ok(id);
 
-		geo.getPostcodeLatLng(user.postcode, function(error, latlng) {
-			if (error) {
+		geo.getPostcodeLatLng(user.postcode, function(err, latlng) {
+			if (err) {
 				message = util.format("Failed to get latlng from postcode %s.", user.postcode);
 
 				console.error(error);
@@ -46,7 +46,7 @@ exports.use = function(app) {
 			}
 
 			app.repository.getUser(id, function(err, dbUser) {
-				if (error) {
+				if (err) {
 					message = util.format("Failed to get user by id %s.", id);
 
 					console.error(error);
@@ -62,6 +62,7 @@ exports.use = function(app) {
 				dbUser.postcode = user.postcode;
 				dbUser.lat = latlng.lat;
 				dbUser.lng = latlng.lng;
+				dbUser.categories = user.categories;
 
 				app.repository.updateUser(dbUser, function(err) {
 					if (err) {
@@ -84,45 +85,26 @@ exports.use = function(app) {
 	app.post("/users.json", function(req, res) {
 		var message;
 		var user = req.body.user;
-		var username = user.username.toLowerCase();
 
-		// Username and password.
-		switch (user.username) {
-			case "alice":
-				core.sendJsonResponse(core.HttpStatus.OK, res, {
-					id: "1",
-					username: user.username,
-					firstName: "Alice",
-					lastName: "Arnold"
-				});
+		assert.ok(user);
 
-				break;
+		var username = user.username;
 
-			case "bob":
-				core.sendJsonResponse(core.HttpStatus.OK, res, {
-					id: "2",
-					username: user.username,
-					firstName: "Bob",
-					lastName: "Baggins"
-				});
+		assert.ok(username);
 
-				break;
-
-			case "carl":
-				core.sendJsonResponse(core.HttpStatus.OK, res, {
-					id: "508c6efee4b0c86b6b5eac4b",
-					username: user.username,
-					firstName: "Carl",
-					lastName: "Smith"
-				});
-
-				break;
-
-			default:
+		app.repository.getUserByName(username, function(err, dbUser) {
+			if (err) {
 				message = util.format("User not found: %s.", user.username);
-				core.sendNotFoundError(res, message);
 
-				break;
-		}
+				console.error(error);
+				core.sendApiError(message);
+
+				return;
+			}
+
+			user = _mapDbUserToUser(dbUser);
+
+			core.sendJsonResponse(core.HttpStatus.OK, res, user);
+		});
 	});
 };

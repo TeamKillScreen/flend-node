@@ -1,8 +1,10 @@
-// TODO: err versus error
-// TODO: log errors and return
+// TODO: err versus error.
+// TODO: handle errors and return.
+// TODO: refactor into repository per object type.
 
 exports.connect = function() {
 	// Utility packages.
+	var assert = require("assert");
 	var config = require("config");
 	var util = require("util");
 
@@ -34,6 +36,7 @@ exports.connect = function() {
 		lat: Number,
 		lng: Number,
 		emailAddress: String,
+		categories: [ mongoose.Schema.Types.ObjectId ],
 		created: Date,
 		updated: Date
 	});
@@ -43,7 +46,27 @@ exports.connect = function() {
 	var _getUser = function(id, next) {
 		console.dir(id);
 		
-		var query = { _id: id };
+		var query = {
+			_id: id
+		};
+
+		return _User.findOne(query, function(err, user) {
+			console.dir(err);
+			console.dir(user);
+
+			next(err, user);
+		});		
+	};
+
+	var _getUserByName = function(username, next) {
+		assert.ok(username);
+		assert.ok(next);
+
+		console.dir(username);
+		
+		var query = {
+			username: username
+		};
 
 		return _User.findOne(query, function(err, user) {
 			console.dir(err);
@@ -92,7 +115,9 @@ exports.connect = function() {
 	var _getItem = function(id, next) {
 		console.dir(id);
 		
-		var query = { _id: id };
+		var query = {
+			_id: id
+		};
 
 		return _Item.findOne(query, function(err, item) {
 			console.dir(err);
@@ -133,6 +158,7 @@ exports.connect = function() {
 		// Users.
 		User: _User,
 		getUser: _getUser,
+		getUserByName: _getUserByName,
 		updateUser: _updateUser,
 
 		// Items.
