@@ -74,11 +74,10 @@ var _sendSms = function(mobileNumber, message) {
 		body: xml
 	};
 
-	
 	var parseResponse = function(error, response) {
 		if (error) {
 			console.log("=> SMS ERROR");
-			console.dir(error);
+			console.log(error);
 
 		} else {
 			console.log("=> SMS OK");
