@@ -7,6 +7,10 @@ exports.use = function(app) {
 
 	// Geo.
 	var geo = require("../geo/geo");
+	var geolib = require("geolib")
+
+	// Bitly
+	var Bitly = require('bitly');
 
 	// API core.
 	var core = require("./core").use(app);
@@ -141,7 +145,7 @@ exports.use = function(app) {
 
 				// Find 'interested' users nearby.
 				setTimeout(function() {
-					var users = app.repository.getUsersNear(latlng, 0.01, function(err, users) {
+					app.repository.getUsersNear(latlng, 0.01, function(err, users) {
 							if (err) {
 								message = util.format("Failed to get users near item: %s.", item.title);
 			
@@ -152,8 +156,23 @@ exports.use = function(app) {
 							}
 
 							_.each(users, function(user) {
-								message = util.format("New item '%s'.", item.title);
-								sms.sendSms(user.mobileNumber, message);
+								var itemURL = util.format("http://www.flend.co/items/%s", item.id);
+
+								var bitly = new Bitly(config.bitly.username, config.bitly.apikey);
+								bitly.shorten(itemURL, function(err, response) {
+									if (err) throw err;
+
+									// See http://code.google.com/p/bitly-api/wiki/ApiDocumentation for format of returned object
+									var short_url = response.data.url;
+
+									// Do something with data
+									var distance = geolib.convertUnit("mi", geolib.getDistance({latitude: latlng.lat, longitude: latlng.lng}, {latitude: user.geo[0], longitude: user.geo[1]}), 2);
+
+									message = util.format("Flend.co: A new item request has been added %s miles from you. Item details: '%s'. Link: %s", distance, item.title, short_url);
+									sms.sendSms(user.mobileNumber, message);
+								});
+
+								
 							});
 						});
 				}, 0);

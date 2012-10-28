@@ -1,22 +1,21 @@
 {
-  "name": "flendapi",
+  "name": "server",
   "version": "0.0.0",
   "description": "ERROR: No README.md file found!",
   "main": "server.js",
-  "directories": {
-    "test": "test"
-  },
   "dependencies": {
     "bitly": "~1.2.4",
+    "bson": "~0.1.5",
     "config": "~0.4.17",
     "express": "~3.0.0",
-    "eyes": "~0.1.8",
-    "gridfs-stream": "~0.3.2",
-    "inspect": "~0.0.2",
+    "geolib": "~1.2.3",
     "mongoose": "~3.3.1",
     "node-pusher": "~0.0.2",
     "request": "~2.11.4",
-    "underscore": "~1.4.2"
+    "underscore": "~1.4.2",
+    "eyes": "~0.1.8",
+    "gridfs-stream": "~0.3.2",
+    "inspect": "~0.0.2"
   },
   "devDependencies": {},
   "scripts": {
