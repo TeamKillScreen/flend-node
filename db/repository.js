@@ -20,12 +20,13 @@ exports.connect = function() {
 	db.on('error', function(err)
 		{
 			if(err)
-				db.db.close();
+			
+			db.db.close();
 
-			connect()
+			connect();
 		}
 		);
-	
+
 	function connect () {
 		db.open(config.mongolab.connectionString);
 	}
