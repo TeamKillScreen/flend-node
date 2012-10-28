@@ -172,7 +172,7 @@ exports.use = function(app) {
 										// Do something with data
 										var distance = geolib.convertUnit("mi", geolib.getDistance({latitude: latlng.lat, longitude: latlng.lng}, {latitude: user.geo[0], longitude: user.geo[1]}), 2);
 
-										message = util.format("Flend.co: A new item request has been added %s miles from you. Item details: '%s'. Link: %s", distance, item.title, short_url);
+										message = util.format("A new item request has been added %s miles from you. Item details: '%s'. %s", distance, item.title, short_url);
 										sms.sendSms(user.mobileNumber, message);
 									});
 								}
