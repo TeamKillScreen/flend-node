@@ -60,10 +60,12 @@ exports.use = function(app) {
 				dbUser.mobileNumber = user.mobileNumber;
 				dbUser.emailAddress = user.emailAddress;
 				dbUser.postcode = user.postcode;
+				
 				dbUser.geo = [
 					latlng.lat,
 					latlng.lng
-				],
+				];
+
 				dbUser.categories = user.categories;
 
 				app.repository.updateUser(dbUser, function(err) {

@@ -78,6 +78,22 @@ exports.connect = function() {
 		});		
 	};
 
+	var _getUsersNear = function(latlng, radius, next) {
+		var geo = [
+			latlng.lat,
+			latlng.lng
+		];
+
+		return _User.find({
+			geo: {
+				$nearSphere: geo,
+				$maxDistance: radius
+			}
+		}, function(err, users) {
+			next(err, users);
+		});
+	};
+
 	var _updateUser = function(user, next) {
 		user.save(function(err) {
 			next(err);
@@ -111,8 +127,8 @@ exports.connect = function() {
 	var _getItems = function(next) {
 		var query = {};
 
-		return _Item.find(query, function(err, people) {
-			next(err, people);
+		return _Item.find(query, function(err, items) {
+			next(err, items);
 		});
 	};
 
@@ -163,6 +179,7 @@ exports.connect = function() {
 		User: _User,
 		getUser: _getUser,
 		getUserByName: _getUserByName,
+		getUsersNear: _getUsersNear,
 		updateUser: _updateUser,
 
 		// Items.

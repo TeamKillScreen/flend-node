@@ -14,6 +14,9 @@ exports.use = function(app) {
 	// Pusher API.
 	var Pusher = require("node-pusher");
 
+	// Esendex API.
+	var sms = require("../sms/sms");
+
 	var pusher = new Pusher({
 		appId: config.pusher.appId,
 		key: config.pusher.key,
@@ -136,39 +139,27 @@ exports.use = function(app) {
 					pusher.trigger("flend", "newItem", item);
 				}, 0);
 
+				// Find 'interested' users nearby.
+				setTimeout(function() {
+					var users = app.repository.getUsersNear(latlng, 0.01, function(err, users) {
+							if (err) {
+								message = util.format("Failed to get users near item: %s.", item.title);
+			
+								console.error(err);
+								core.sendApiError(message);
+
+								return;
+							}
+
+							_.each(users, function(user) {
+								message = util.format("New item '%s'.", item.title);
+								sms.sendSms(user.mobileNumber, message);
+							});
+						});
+				}, 0);
+
 				core.sendJsonResponse(core.HttpStatus.OK, res, item);
 			});
 		});
 	});
-
-	/*
-	// Attach photo to item.
-	app.post("/items/:id/photos.json", function(req, res) {
-		var message;
-		var photo = req.body.photo;
-
-		var dbItem = new app.repository.Item({
-			title: item.title,
-			description: item.description,
-			category: item.category,
-			tags: item.tags,
-			created: new Date()
-		});
-
-		app.repository.addItem(dbItem, function(err) {
-			if (err) {
-				message = util.format("Failed to add item: %s.", item.title);
-
-				console.error(err);
-				core.sendApiError(message);
-
-				return;
-			}
-
-			var item = _mapDbItemToItem(dbItem);
-
-			core.sendJsonResponse(core.HttpStatus.OK, res, item);
-		});
-	});
-	*/
 };
