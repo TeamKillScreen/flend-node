@@ -17,6 +17,11 @@ exports.connect = function() {
 
 	// Connect to database.
 	var db = mongoose.createConnection(config.mongolab.connectionString);
+	db.on('error', function(err)
+		{
+			console.error(util.format("Mongoose DB Connection Failure. %s", err.toString()));
+		}
+		);
 
 	// GridFS.
 	/*
