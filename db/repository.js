@@ -1,3 +1,6 @@
+// TODO: err versus error
+// TODO: log errors and return
+
 exports.connect = function() {
 	// Utility packages.
 	var config = require("config");
@@ -40,16 +43,16 @@ exports.connect = function() {
 		
 		var query = { _id: id };
 
-		return _Item.findOne(query, function(err, item) {
+		return _User.findOne(query, function(err, user) {
 			console.dir(err);
-			console.dir(item);
+			console.dir(user);
 
-			next(err, item);
+			next(err, user);
 		});		
 	};
 
-	var _updateUser = function(item, next) {
-		item.save(function(err) {
+	var _updateUser = function(user, next) {
+		user.save(function(err) {
 			next(err);
 		});
 	};
@@ -124,6 +127,11 @@ exports.connect = function() {
 	var repository = {
 		// Database.
 		db: db,
+
+		// Users.
+		User: _User,
+		getUser: _getUser,
+		updateUser: _updateUser,
 
 		// Items.
 		Item: _Item,
